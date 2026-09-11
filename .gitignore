@@ -1,0 +1,1881 @@
+# ============================================================
+
+# K3 — Intelligent Assistant System
+
+# .gitignore
+
+#
+
+# Purpose:
+
+# Prevent local, temporary, generated, sensitive and
+
+# environment-specific files from being committed.
+
+#
+
+# Important:
+
+# NEVER commit API keys, passwords, tokens, credentials,
+
+# private keys, .env files, local databases, user data,
+
+# model weights, runtime state or private logs.
+
+#
+
+# This file is intentionally comprehensive and supports:
+
+#
+
+# AI Engine
+
+# Memory
+
+# Tools
+
+# Agents
+
+# API
+
+# Database
+
+# Vector Storage
+
+# Evaluation
+
+# Frontend
+
+# Docker
+
+# Cloud
+
+# Testing
+
+# Development
+
+#
+
+# ============================================================
+
+# ============================================================
+
+# PYTHON
+
+# ============================================================
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+*.dll
+*.dylib
+
+# ============================================================
+
+# PYTHON CACHE / BYTECODE
+
+# ============================================================
+
+.pytest_cache/
+.mypy_cache/
+.pyright/
+.ruff_cache/
+.pylint.d/
+.flake8_cache/
+
+.dmypy.json
+dmypy.json
+
+.pytype/
+.pyre/
+.pyre_configuration/
+
+# ============================================================
+
+# VIRTUAL ENVIRONMENTS
+
+# ============================================================
+
+.venv/
+venv/
+env/
+ENV/
+
+env.bak/
+venv.bak/
+
+.conda/
+conda-env/
+
+pyvenv.cfg
+
+# ============================================================
+
+# PACKAGE / BUILD ARTIFACTS
+
+# ============================================================
+
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+
+*.egg
+*.egg-info/
+*.whl
+*.manifest
+*.spec
+
+pip-log.txt
+pip-delete-this-directory.txt
+
+pip-wheel-metadata/
+wheels/
+sdist/
+
+# ============================================================
+
+# TESTING
+
+# ============================================================
+
+.pytest_cache/
+
+.coverage
+.coverage.*
+coverage.xml
+coverage.json
+*.cover
+*.py,cover
+
+htmlcov/
+
+.tox/
+.nox/
+.hypothesis/
+
+test-results/
+test-reports/
+
+junit.xml
+pytest.xml
+
+reports/test/
+reports/tests/
+
+# ============================================================
+
+# TYPE CHECKING / LINTING
+
+# ============================================================
+
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+.pyright/
+.ruff_cache/
+.pylint.d/
+.flake8_cache/
+
+.pytype/
+.pyre/
+
+lint-results/
+lint-reports/
+
+# ============================================================
+
+# ENVIRONMENT VARIABLES
+
+# ============================================================
+
+.env
+.env.*
+
+# Safe template
+
+!.env.example
+
+.env.local
+.env.development
+.env.development.local
+
+.env.test
+.env.test.local
+.env.testing
+
+.env.production
+.env.production.local
+
+.env.staging
+.env.staging.local
+
+# ============================================================
+
+# CONFIGURATION FILES CONTAINING LOCAL SECRETS
+
+# ============================================================
+
+config.local.*
+config.private.*
+config.secret.*
+
+settings.local.*
+settings.private.*
+settings.secret.*
+
+k3.local.*
+k3.private.*
+k3.secret.*
+
+# ============================================================
+
+# SECRETS / CREDENTIALS
+
+# ============================================================
+
+*.secret
+*.secrets
+*.credential
+*.credentials
+
+*.token
+*.tokens
+
+*.password
+*.passwd
+
+*.key
+*.keyfile
+
+*.pem
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+
+*.jks
+*.keystore
+
+# ============================================================
+
+# SSH / PRIVATE KEYS
+
+# ============================================================
+
+id_rsa
+id_rsa.pub
+
+id_dsa
+id_dsa.pub
+
+id_ecdsa
+id_ecdsa.pub
+
+id_ed25519
+id_ed25519.pub
+
+*.rsa
+*.dsa
+*.ecdsa
+*.ed25519
+
+*.private
+*.privatekey
+*.priv
+
+# ============================================================
+
+# CLOUD CREDENTIALS
+
+# ============================================================
+
+credentials.json
+credentials.yaml
+credentials.yml
+
+credentials.local.json
+credentials.local.yaml
+credentials.local.yml
+
+service-account.json
+*-service-account.json
+
+google-credentials.json
+gcp-credentials.json
+
+.aws/
+.azure/
+.gcloud/
+
+*.aws_credentials
+*.aws_credentials.json
+
+terraform.tfstate
+terraform.tfstate.*
+
+.terraform/
+.terraform.lock.hcl
+
+*.tfstate
+*.tfstate.*
+
+*.tfvars
+*.tfvars.json
+
+# ============================================================
+
+# DATABASES
+
+# ============================================================
+
+*.db
+*.sqlite
+*.sqlite3
+
+*.db-journal
+*.db-shm
+*.db-wal
+
+*.mdb
+*.accdb
+
+data/
+database/
+databases/
+
+local_database/
+local_databases/
+
+db/
+db_data/
+
+# ============================================================
+
+# DATABASE EXPORTS / DUMPS
+
+# ============================================================
+
+*.sql
+*.sql.gz
+*.dump
+*.backup
+
+database_dump/
+database_dumps/
+
+db_backup/
+db_backups/
+
+exports/database/
+exports/databases/
+
+# ============================================================
+
+# LOGS
+
+# ============================================================
+
+*.log
+*.log.*
+*.trace
+
+logs/
+log/
+
+debug.log
+error.log
+access.log
+application.log
+
+server.log
+worker.log
+agent.log
+model.log
+api.log
+
+runtime.log
+audit.log
+
+*.log.gz
+
+# ============================================================
+
+# TEMPORARY FILES
+
+# ============================================================
+
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+
+*.swp
+*.swo
+*.swn
+
+*.pid
+*.pid.lock
+
+*.lock
+*.sock
+
+tmp/
+temp/
+.tmp/
+.cache/
+
+.local_cache/
+
+scratch/
+working/
+
+# ============================================================
+
+# AI / MODEL ARTIFACTS
+
+# ============================================================
+
+ai_outputs/
+ai_output/
+
+model_outputs/
+model_output/
+
+model_artifacts/
+model_artifact/
+
+model_cache/
+models_cache/
+
+models/
+model/
+
+checkpoints/
+checkpoint/
+
+weights/
+weight/
+
+adapters/
+lora/
+loras/
+
+finetunes/
+fine_tuning/
+fine_tuning_runs/
+
+*.bin
+*.safetensors
+*.gguf
+*.ggml
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.hdf5
+*.tflite
+*.pb
+
+*.model
+*.weights
+
+# ============================================================
+
+# LLM / PROMPT ARTIFACTS
+
+# ============================================================
+
+prompt_outputs/
+prompt_output/
+
+prompt_runs/
+prompt_run/
+
+prompt_cache/
+prompt_caches/
+
+llm_outputs/
+llm_output/
+
+llm_cache/
+llm_caches/
+
+generation_outputs/
+generation_output/
+
+completion_outputs/
+completion_output/
+
+chat_outputs/
+chat_output/
+
+# ============================================================
+
+# EMBEDDINGS / VECTOR DATABASES
+
+# ============================================================
+
+embeddings/
+embedding/
+embedding_cache/
+
+vector_store/
+vectorstore/
+vectorstores/
+
+indexes/
+index_data/
+
+faiss/
+faiss_index/
+
+chroma/
+chroma_db/
+
+qdrant/
+qdrant_data/
+
+milvus/
+milvus_data/
+
+weaviate/
+weaviate_data/
+
+pinecone/
+pinecone_data/
+
+# ============================================================
+
+# K3 MEMORY SYSTEM
+
+# ============================================================
+
+memory/
+memory_data/
+memory_cache/
+
+short_term_memory/
+long_term_memory/
+
+conversation_memory/
+semantic_memory/
+episodic_memory/
+
+memory_store/
+memory_storage/
+
+memory_indexes/
+
+# ============================================================
+
+# K3 CONVERSATIONS
+
+# ============================================================
+
+conversations/
+conversation_data/
+
+conversation_cache/
+conversation_caches/
+
+conversation_exports/
+conversation_export/
+
+chat_history/
+chat_histories/
+
+message_history/
+message_histories/
+
+sessions/
+session_data/
+
+# ============================================================
+
+# K3 AGENT SYSTEM
+
+# ============================================================
+
+agent_state/
+agent_states/
+
+agent_runs/
+agent_run/
+
+agent_outputs/
+agent_output/
+
+agent_logs/
+agent_cache/
+
+agent_memory/
+
+orchestration/
+orchestrator_state/
+
+workflow_state/
+workflow_runs/
+
+task_state/
+task_runs/
+
+# ============================================================
+
+# K3 TOOLS
+
+# ============================================================
+
+tool_output/
+tool_outputs/
+
+tool_cache/
+tool_caches/
+
+tool_state/
+tool_states/
+
+tool_logs/
+
+external_api_cache/
+external_api_data/
+
+web_cache/
+web_data/
+
+file_cache/
+file_data/
+
+# ============================================================
+
+# K3 RUNTIME / LOCAL STATE
+
+# ============================================================
+
+runtime/
+runtime_data/
+runtime_cache/
+
+state/
+states/
+
+local_state/
+local_states/
+
+local_data/
+local_storage/
+
+.k3/
+.k3-cache/
+.k3-state/
+
+k3.local.json
+k3.local.yaml
+k3.local.yml
+
+k3-report/
+k3-reports/
+
+k3-debug/
+k3-debugging/
+
+k3-traces/
+k3-trace/
+
+k3-runtime/
+k3-runtime-data/
+
+# ============================================================
+
+# AI EVALUATION
+
+# ============================================================
+
+evaluation/results/
+evaluation/result/
+
+evaluation/output/
+evaluation/outputs/
+
+evaluation/data/
+evaluation/runs/
+evaluation/logs/
+
+eval_results/
+eval_outputs/
+eval_runs/
+
+eval_cache/
+
+evaluations/
+evaluation_reports/
+
+# ============================================================
+
+# EXPERIMENTS
+
+# ============================================================
+
+experiments/data/
+experiments/logs/
+experiments/output/
+experiments/outputs/
+experiments/results/
+experiments/runs/
+experiments/cache/
+
+experiment_data/
+experiment_outputs/
+experiment_results/
+
+# ============================================================
+
+# BENCHMARKS
+
+# ============================================================
+
+benchmarks/data/
+benchmarks/logs/
+benchmarks/output/
+benchmarks/outputs/
+benchmarks/results/
+benchmarks/runs/
+
+benchmark_results/
+benchmark_outputs/
+
+# ============================================================
+
+# DATASETS
+
+# ============================================================
+
+datasets/
+dataset/
+local_datasets/
+
+raw_data/
+raw/
+processed_data/
+processed/
+
+training_data/
+training/
+validation_data/
+validation/
+test_data/
+test/
+
+private_data/
+restricted_data/
+sensitive_data/
+
+# ============================================================
+
+# GENERATED DATA
+
+# ============================================================
+
+generated/
+generated_data/
+generated_files/
+generated_code/
+
+outputs/
+output/
+
+artifacts/
+artifact/
+
+results/
+result/
+
+reports/
+report/
+
+# ============================================================
+
+# API GENERATED FILES
+
+# ============================================================
+
+openapi.json
+openapi.yaml
+
+swagger.json
+swagger.yaml
+
+api-schema.json
+api-schema.yaml
+
+generated-api/
+generated_api/
+
+api/generated/
+api/generated_files/
+
+# ============================================================
+
+# GENERATED DOCUMENTATION
+
+# ============================================================
+
+site/
+docs/_build/
+docs/generated/
+
+docs/export/
+docs/exports/
+
+documentation/generated/
+documentation/build/
+
+mkdocs_build/
+sphinx_build/
+
+# ============================================================
+
+# JUPYTER / NOTEBOOKS
+
+# ============================================================
+
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+.jupyter/
+.jupyter_cache/
+
+*.nbconvert.ipynb
+
+# ============================================================
+
+# IDE — VISUAL STUDIO CODE
+
+# ============================================================
+
+.vscode/
+.history/
+*.code-workspace
+
+# ============================================================
+
+# IDE — JETBRAINS
+
+# ============================================================
+
+.idea/
+
+*.iml
+*.ipr
+*.iws
+
+# ============================================================
+
+# IDE — VISUAL STUDIO
+
+# ============================================================
+
+.vs/
+
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ============================================================
+
+# OTHER IDE / EDITORS
+
+# ============================================================
+
+.spyderproject
+.spyproject
+
+*.sublime-workspace
+*.sublime-project
+
+.vim/
+.nvim/
+
+*.swp
+*.swo
+
+# ============================================================
+
+# OPERATING SYSTEM — MACOS
+
+# ============================================================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+Icon
+._*
+
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# ============================================================
+
+# OPERATING SYSTEM — WINDOWS
+
+# ============================================================
+
+Thumbs.db
+Thumbs.db:encryptable
+
+ehthumbs.db
+ehthumbs_vista.db
+
+Desktop.ini
+
+$RECYCLE.BIN/
+
+*.lnk
+
+# ============================================================
+
+# OPERATING SYSTEM — LINUX
+
+# ============================================================
+
+.directory
+
+.Trash-*
+.nfs*
+
+# ============================================================
+
+# DOCKER
+
+# ============================================================
+
+docker-compose.override.yml
+
+docker/.env
+docker/*.env
+
+docker/volumes/
+docker/data/
+
+docker/storage/
+docker/cache/
+
+docker/postgres/
+docker/redis/
+docker/mongo/
+docker/elasticsearch/
+
+# ============================================================
+
+# CONTAINER / LOCAL SERVICE DATA
+
+# ============================================================
+
+redis-data/
+redis_data/
+
+postgres-data/
+postgres_data/
+
+mysql-data/
+mysql_data/
+
+mongo-data/
+mongo_data/
+
+elasticsearch-data/
+elasticsearch_data/
+
+opensearch-data/
+opensearch_data/
+
+minio-data/
+minio_data/
+
+# ============================================================
+
+# NODE / FRONTEND
+
+# ============================================================
+
+node_modules/
+
+.npm/
+.yarn/
+.pnpm-store/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.next/
+.nuxt/
+out/
+.vite/
+.cache/
+
+.parcel-cache/
+.turbo/
+.svelte-kit/
+
+dist/
+build/
+
+*.tsbuildinfo
+
+# ============================================================
+
+# FRONTEND ENVIRONMENT FILES
+
+# ============================================================
+
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+*.local.env
+
+# ============================================================
+
+# JAVASCRIPT / TYPESCRIPT CACHE
+
+# ============================================================
+
+.eslintcache
+.stylelintcache
+
+.nx/
+.angular/cache/
+
+coverage/
+
+# ============================================================
+
+# CLOUD / INFRASTRUCTURE
+
+# ============================================================
+
+.terraform/
+.terragrunt-cache/
+
+*.tfstate
+*.tfstate.*
+
+*.tfvars
+*.tfvars.json
+
+.serverless/
+.aws-sam/
+
+.serverless_plugins/
+
+.pulumi/
+
+# ============================================================
+
+# KUBERNETES LOCAL DATA
+
+# ============================================================
+
+.kube-cache/
+kube-cache/
+
+helm/.cache/
+helm/cache/
+
+minikube/
+kind/
+
+# ============================================================
+
+# LOCAL USER DATA
+
+# ============================================================
+
+user_data/
+users/
+profiles/
+
+uploads/
+upload/
+
+attachments/
+attachment/
+
+private_uploads/
+temporary_uploads/
+uploads_tmp/
+
+# ============================================================
+
+# PERSONAL / SENSITIVE DATA
+
+# ============================================================
+
+personal_data/
+private_data/
+
+sensitive/
+sensitive_data/
+
+pii/
+pii_data/
+
+private/
+confidential/
+
+# ============================================================
+
+# EXPORTS
+
+# ============================================================
+
+exports/
+export/
+
+conversation_exports/
+conversation_export/
+
+data_exports/
+data_export/
+
+reports/export/
+reports/exports/
+
+# ============================================================
+
+# PERFORMANCE / PROFILING
+
+# ============================================================
+
+*.prof
+*.lprof
+*.profraw
+
+*.gcda
+*.gcno
+
+*.out
+
+profiling/
+profile/
+profiles/
+
+performance/
+performance_data/
+
+flamegraphs/
+benchmarks/profiling/
+
+# ============================================================
+
+# MEMORY / DEBUG DUMPS
+
+# ============================================================
+
+*.dump
+*.dmp
+*.core
+*.stackdump
+
+core/
+dumps/
+memory_dumps/
+
+heap/
+heap_dumps/
+
+# ============================================================
+
+# BACKUPS
+
+# ============================================================
+
+*.backup
+*.bak
+*.old
+*.orig
+
+backup/
+backups/
+
+backup_data/
+backup_database/
+backup_databases/
+
+# ============================================================
+
+# GENERATED ARCHIVES
+
+# ============================================================
+
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+*.iso
+*.img
+
+# ============================================================
+
+# LARGE LOCAL FILES
+
+# ============================================================
+
+*.dat
+*.cache
+
+*.large
+*.bin
+
+large_files/
+large_data/
+local_large_files/
+
+# ============================================================
+
+# GENERATED MEDIA
+
+# ============================================================
+
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+
+media/generated/
+media/output/
+media/cache/
+
+# ============================================================
+
+# GENERATED IMAGES
+
+# ============================================================
+
+images/generated/
+images/output/
+images/cache/
+
+generated_images/
+generated_media/
+
+# ============================================================
+
+# GENERATED TEXT / AI DOCUMENTS
+
+# ============================================================
+
+generated_text/
+generated_documents/
+
+ai_documents/
+ai_generated_documents/
+
+summaries/
+generated_summaries/
+
+transcripts/
+generated_transcripts/
+
+# ============================================================
+
+# LOCAL SEARCH INDEXES
+
+# ============================================================
+
+search_index/
+search_indexes/
+
+index/
+indexes/
+
+whoosh_index/
+lucene_index/
+
+.cache_search/
+
+# ============================================================
+
+# LOCAL MESSAGE QUEUES
+
+# ============================================================
+
+queue_data/
+queues/
+message_queue/
+message_queues/
+
+celerybeat-schedule
+celerybeat.pid
+
+# ============================================================
+
+# LOCAL MONITORING
+
+# ============================================================
+
+prometheus_data/
+grafana_data/
+
+monitoring_data/
+metrics_data/
+
+*.prom
+
+# ============================================================
+
+# LOCAL AUTHENTICATION / SESSIONS
+
+# ============================================================
+
+auth_cache/
+auth_data/
+
+tokens/
+token_cache/
+
+oauth/
+oauth_cache/
+
+jwt/
+jwt_cache/
+
+# ============================================================
+
+# LOCAL API CACHE
+
+# ============================================================
+
+api_cache/
+api_caches/
+
+http_cache/
+request_cache/
+response_cache/
+
+requests_cache/
+
+# ============================================================
+
+# LOCAL BROWSER / WEB TOOL DATA
+
+# ============================================================
+
+browser_data/
+browser_cache/
+
+web_cache/
+web_sessions/
+
+cookies/
+cookie_cache/
+
+downloads/local/
+browser_downloads/
+
+# ============================================================
+
+# LOCAL FILE PROCESSING
+
+# ============================================================
+
+file_processing/
+file_cache/
+
+document_cache/
+document_processing/
+
+ocr_cache/
+ocr_output/
+
+pdf_cache/
+pdf_output/
+
+# ============================================================
+
+# LOCAL AUDIO PROCESSING
+
+# ============================================================
+
+audio_cache/
+audio_output/
+
+speech_cache/
+speech_output/
+
+tts_cache/
+tts_output/
+
+stt_cache/
+stt_output/
+
+# ============================================================
+
+# LOCAL IMAGE PROCESSING
+
+# ============================================================
+
+image_cache/
+image_output/
+
+vision_cache/
+vision_output/
+
+ocr_data/
+
+# ============================================================
+
+# LOCAL DEVELOPMENT CONFIGURATION
+
+# ============================================================
+
+.local/
+.local_data/
+.local_config/
+
+*.local.json
+*.local.yaml
+*.local.yml
+
+*.dev.json
+*.dev.yaml
+*.dev.yml
+
+# ============================================================
+
+# PROCESS / SOCKET FILES
+
+# ============================================================
+
+*.pid
+*.lock
+*.sock
+*.ipc
+
+# ============================================================
+
+# DEBUGGING
+
+# ============================================================
+
+debug/
+debug_data/
+debug_output/
+debug_outputs/
+
+debug_cache/
+debug_dumps/
+
+trace/
+traces/
+trace_data/
+
+diagnostics/
+diagnostic_data/
+
+# ============================================================
+
+# ERROR REPORTS
+
+# ============================================================
+
+error_reports/
+crash_reports/
+
+*.crash
+*.error
+
+# ============================================================
+
+# GENERATED CONFIGURATION
+
+# ============================================================
+
+generated_config/
+generated_configs/
+
+runtime_config/
+runtime_configs/
+
+temporary_config/
+temporary_configs/
+
+# ============================================================
+
+# LOCAL CERTIFICATES
+
+# ============================================================
+
+certificates/
+certs/
+
+local_certs/
+local_certificates/
+
+*.pem
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+
+# ============================================================
+
+# SECURITY SCANNING OUTPUT
+
+# ============================================================
+
+security_reports/
+security_output/
+security_results/
+
+vulnerability_reports/
+dependency_reports/
+
+bandit-report/
+semgrep-results/
+trivy-results/
+
+# ============================================================
+
+# DEPENDENCY / PACKAGE MANAGER CACHE
+
+# ============================================================
+
+.pip_cache/
+pip_cache/
+
+.poetry/
+poetry_cache/
+
+.pdm-cache/
+.uv/
+.uv-cache/
+
+**/pypackages/
+
+# ============================================================
+
+# PYENV
+
+# ============================================================
+
+.python-version.local
+
+# ============================================================
+
+# LOCAL DOCUMENTATION TOOLS
+
+# ============================================================
+
+.docusaurus/
+.vuepress/dist/
+
+docs/.cache/
+docs/.temp/
+
+# ============================================================
+
+# LOCAL CI / BUILD DATA
+
+# ============================================================
+
+ci-cache/
+ci_data/
+
+.github/local/
+.github/cache/
+
+# ============================================================
+
+# GENERATED RELEASE FILES
+
+# ============================================================
+
+release/
+releases/
+
+release_build/
+release_artifacts/
+
+# ============================================================
+
+# PACKAGE MANAGER LOCK FILES
+
+# ============================================================
+
+#
+
+# Lock files are intentionally NOT ignored.
+
+#
+
+# When used by the project, they should normally be committed
+
+# to guarantee reproducible dependency installation.
+
+#
+
+# Examples:
+
+#
+
+# package-lock.json
+
+# yarn.lock
+
+# pnpm-lock.yaml
+
+# poetry.lock
+
+# uv.lock
+
+#
+
+# ============================================================
+
+# ============================================================
+
+# LOCAL ENVIRONMENT / MACHINE CONFIGURATION
+
+# ============================================================
+
+machine_config/
+machine_data/
+
+host_config/
+host_data/
+
+system_config/
+local_machine/
+
+# ============================================================
+
+# TEMPORARY PROJECT COPIES
+
+# ============================================================
+
+k3-copy/
+k3_backup/
+k3_temp/
+
+project_backup/
+project_copy/
+project_temp/
+
+# ============================================================
+
+# GENERATED CHECKSUMS / LOCAL MANIFESTS
+
+# ============================================================
+
+*.local.sha256
+*.local.md5
+
+checksums/
+manifests/generated/
+
+# ============================================================
+
+# IMPORTANT EXCEPTIONS
+
+# ============================================================
+
+# Environment template
+
+!.env.example
+
+# GitHub configuration
+
+!.github/
+!.github/workflows/
+!.github/ISSUE_TEMPLATE/
+!.github/PULL_REQUEST_TEMPLATE.md
+
+# Documentation
+
+!docs/
+!docs/**/*.md
+
+# Main project documentation
+
+!README.md
+!LICENSE
+!CONTRIBUTING.md
+!CHANGELOG.md
+!SECURITY.md
+!CODE_OF_CONDUCT.md
+
+# Dependency / project configuration
+
+!requirements.txt
+!requirements-dev.txt
+!requirements-test.txt
+!pyproject.toml
+
+# Container / build configuration
+
+!Dockerfile
+!docker-compose.yml
+!docker-compose.yaml
+
+# Build / development configuration
+
+!Makefile
+
+# Configuration examples
+
+!config/
+!config/**/*.example
+!config/**/*.template
+
+# Documentation examples
+
+!docs/examples/
+!docs/examples/**
+
+# ============================================================
+
+# FILE TRACCIATI / VERSIONATI
+
+# ============================================================
+
+#
+
+# Questa sezione documenta le categorie di file che fanno parte
+
+# della source tree di K3 e che devono essere normalmente
+
+# versionate tramite Git.
+
+#
+
+# IMPORTANTE:
+
+# Questa sezione è documentazione della policy Git.
+
+# Non forza Git a tracciare i file.
+
+#
+
+# SOURCE OF TRUTH = Git
+
+# RUNTIME STATE   = locale
+
+# SECRETS         = environment / secret manager
+
+# GENERATED DATA  = locale / artifact storage
+
+#
+
+# Normalmente devono essere versionati:
+
+#
+
+# - codice sorgente
+
+# - test
+
+# - documentazione
+
+# - configurazione condivisa
+
+# - template
+
+# - schema
+
+# - migration
+
+# - API definitions
+
+# - prompt template
+
+# - agent definitions
+
+# - script di sviluppo
+
+# - file necessari alla riproducibilità
+
+#
+
+# Normalmente NON devono essere versionati:
+
+#
+
+# - secret
+
+# - dati utente
+
+# - database locali
+
+# - log
+
+# - runtime state
+
+# - cache
+
+# - output generati
+
+# - modelli AI di grandi dimensioni
+
+# - file specifici della macchina
+
+#
+
+# In caso di dubbio:
+
+#
+
+# NON committare il file.
+
+#
+
+# Verificare prima se rappresenta una parte della source tree
+
+# oppure un artefatto locale/generato.
+
+#
+
+# ============================================================
+
+# ============================================================
+
+# END OF K3 .gitignore
+
+# ============================================================
+!.env.example
+
+!.github/
+!.github/workflows/
+!.github/ISSUE_TEMPLATE/
+!.github/PULL_REQUEST_TEMPLATE.md
+
+!docs/
+!docs/**/*.md
