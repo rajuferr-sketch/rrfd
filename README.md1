@@ -1,0 +1,1553 @@
+# et50
+K3 — Intelligent Assistant System (experimental project)
+# 🤖 K3 — Intelligent Assistant System
+
+> **Modular, extensible and security-oriented intelligent assistant platform**
+
+K3 è un progetto open-source sperimentale per costruire una piattaforma di assistenza intelligente **modulare, orchestrabile e controllabile**.
+
+L'architettura separa i principali domini del sistema — AI, conversazioni, contesto, memoria, tools, agenti, workflow, API e interfaccia — così che ogni componente possa essere sostituito o esteso senza riscrivere l'intero progetto.
+
+K3 non nasce come semplice chatbot: il suo obiettivo è fornire una base per sistemi intelligenti capaci di eseguire attività multi-step mantenendo **controllo umano, sicurezza, osservabilità e possibilità di intervento**.
+
+---
+
+## 📌 Stato del progetto
+
+| Voce         | Stato                         |
+| ------------ | ----------------------------- |
+| Stato        | 🟡 Sperimentale / In sviluppo |
+| Versione     | `0.x`                         |
+| Licenza      | MIT                           |
+| API          | Soggette a cambiamenti        |
+| Architettura | In evoluzione                 |
+
+Durante la fase `0.x` possono cambiare API, interfacce e struttura interna.
+
+---
+
+# 📚 Indice
+
+* [Vision](#-vision)
+* [Obiettivi](#-obiettivi)
+* [Non-obiettivi](#-non-obiettivi)
+* [Principi architetturali](#-principi-architetturali)
+* [Architettura](#️-architettura)
+* [Core Components](#-core-components)
+* [Multi-Agent System](#-multi-agent-system)
+* [Workflow Engine](#-workflow-engine)
+* [Human-in-the-Loop](#-human-in-the-loop)
+* [Security](#-security)
+* [Privacy e Memory Management](#-privacy-e-memory-management)
+* [API](#-api)
+* [Configurazione](#️-configurazione)
+* [Struttura del progetto](#-struttura-del-progetto)
+* [Installazione](#-installazione)
+* [Avvio](#️-avvio)
+* [Esempi](#-esempi)
+* [Testing](#-testing)
+* [Evaluation](#-evaluation)
+* [Logging e Observability](#-logging-e-observability)
+* [Error Handling](#-error-handling)
+* [Roadmap](#️-roadmap)
+* [Development Workflow](#-development-workflow)
+* [Documentazione e ADR](#-documentazione-e-adr)
+* [Versioning](#-versioning)
+* [Contributing](#-contributing)
+* [FAQ](#-faq)
+* [Glossario](#-glossario)
+* [Licenza](#-licenza)
+* [Disclaimer](#️-disclaimer)
+* [Long-Term Vision](#-long-term-vision)
+
+---
+
+# 🎯 Vision
+
+K3 vuole diventare una piattaforma nella quale:
+
+```text
+User
+  ↓
+Interface
+  ↓
+API
+  ↓
+Conversation
+  ↓
+Context + Memory + Prompt
+  ↓
+AI Engine
+  ↓
+Agent / Workflow
+  ↓
+Tools
+  ↓
+External Systems
+```
+
+Ogni livello comunica attraverso interfacce definite, evitando dipendenze rigide tra implementazioni.
+
+Il principio è semplice:
+
+> **Replace components without rebuilding the system.**
+
+Questo vale per provider AI, modelli, database, memory backend, tools, interfacce e sistemi di autenticazione.
+
+---
+
+# 🎯 Obiettivi
+
+K3 si concentra su cinque aree:
+
+### AI Abstraction
+
+* provider e modelli differenti;
+* configurazione centralizzata;
+* streaming;
+* tool calling;
+* timeout e retry;
+* normalizzazione delle risposte.
+
+### Conversation & Context
+
+* conversazioni strutturate;
+* gestione del contesto;
+* messaggi e metadata;
+* tool calls e risultati;
+* contesto rilevante per il modello.
+
+### Memory
+
+* short-term memory;
+* long-term memory;
+* retrieval;
+* ranking;
+* aggiornamento ed eliminazione controllata.
+
+### Tools
+
+* interfaccia standard;
+* registry;
+* validazione;
+* autorizzazione;
+* esecuzione controllata.
+
+### Agents & Workflows
+
+* task decomposition;
+* planning;
+* orchestrazione;
+* esecuzione multi-step;
+* validazione;
+* recovery;
+* approvazione umana;
+* pause/resume/abort.
+
+---
+
+# 🚫 Non-obiettivi
+
+K3 non mira a:
+
+* addestrare un LLM da zero;
+* sostituire i provider AI;
+* implementare immediatamente ogni possibile tool;
+* offrire autonomia completa senza supervisione;
+* eseguire operazioni sensibili senza autorizzazione;
+* memorizzare automaticamente ogni conversazione;
+* permettere agli agenti di operare senza limiti.
+
+La priorità è costruire una base **controllabile e verificabile** prima di aumentare l'autonomia.
+
+---
+
+# 🧱 Principi architetturali
+
+### Modularity
+
+Ogni componente deve avere una responsabilità definita.
+
+### Separation of Concerns
+
+AI, memoria, tools, workflow, API e interfaccia rimangono separati.
+
+### Replaceability
+
+Le implementazioni devono poter essere sostituite attraverso interfacce comuni.
+
+### Extensibility
+
+Nuove funzionalità devono poter essere aggiunte senza modificare inutilmente il core.
+
+### Testability
+
+I componenti devono essere testabili singolarmente e attraverso integrazioni controllate.
+
+### Configuration over Hard-Coding
+
+Le configurazioni devono essere esterne al codice quando possibile.
+
+### Security by Design
+
+La sicurezza deve essere parte dell'architettura, non un'aggiunta successiva.
+
+### Least Privilege
+
+Ogni agente, tool e componente riceve soltanto i permessi necessari.
+
+---
+
+# 🏗️ Architettura
+
+```text
+                         ┌───────────────┐
+                         │     USER      │
+                         └───────┬───────┘
+                                 │
+                                 ▼
+                         ┌───────────────┐
+                         │   INTERFACE   │
+                         └───────┬───────┘
+                                 │
+                                 ▼
+                         ┌───────────────┐
+                         │      API      │
+                         └───────┬───────┘
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │   CONVERSATION SYSTEM   │
+                    └────────────┬────────────┘
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │      CONTEXT MANAGER    │
+                    └────────────┬────────────┘
+                                 │
+                   ┌─────────────┼─────────────┐
+                   ▼             ▼             ▼
+                MEMORY         PROMPT        STATE
+                   │             │             │
+                   └─────────────┼─────────────┘
+                                 ▼
+                         ┌───────────────┐
+                         │   AI ENGINE   │
+                         └───────┬───────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    ▼                         ▼
+              ┌───────────┐            ┌────────────┐
+              │   AGENTS  │            │    TOOLS   │
+              └─────┬─────┘            └──────┬─────┘
+                    │                         │
+                    ▼                         ▼
+              ┌───────────┐             External Systems
+              │ WORKFLOW  │
+              │  ENGINE   │
+              └─────┬─────┘
+                    │
+                    ▼
+             Human Approval /
+             Checkpoints
+```
+
+---
+
+# 🧩 Core Components
+
+## 1. AI Engine
+
+Livello di astrazione tra K3 e i provider AI.
+
+Responsabilità:
+
+* request/response;
+* streaming;
+* model configuration;
+* token management;
+* tool calling;
+* timeout;
+* retry;
+* error handling.
+
+```python
+class AIProvider:
+
+    def generate(self, request):
+        pass
+
+    def stream(self, request):
+        pass
+
+    def generate_with_tools(self, request, tools):
+        pass
+
+    def health_check(self):
+        pass
+```
+
+---
+
+## 2. Conversation System
+
+Gestisce il ciclo di vita delle conversazioni.
+
+```text
+Conversation
+├── ID
+├── User
+├── Messages
+├── Metadata
+├── State
+├── Context
+├── Tool Calls
+├── Tool Results
+└── Memory References
+```
+
+Il sistema di conversazione non deve dipendere direttamente da uno specifico provider AI.
+
+---
+
+## 3. Context Manager
+
+Seleziona le informazioni necessarie al modello.
+
+```text
+Current Request
+      +
+Conversation
+      +
+Relevant Memory
+      +
+Tool Information
+      +
+System Instructions
+      ↓
+Final Context
+```
+
+Il Context Manager deve ridurre informazioni obsolete, irrilevanti o ridondanti.
+
+---
+
+## 4. Prompt System
+
+Responsabile della costruzione del prompt finale.
+
+Gestisce:
+
+* system instructions;
+* prompt templates;
+* context assembly;
+* memory injection;
+* tool definitions;
+* policies;
+* comportamento configurabile.
+
+---
+
+## 5. Memory System
+
+```text
+Memory
+├── Short-Term
+└── Long-Term
+```
+
+### Short-Term
+
+Stato relativo all'attività corrente:
+
+* conversazione;
+* task;
+* messaggi recenti;
+* stato temporaneo.
+
+### Long-Term
+
+Informazioni utili tra sessioni:
+
+* preferenze;
+* fatti rilevanti;
+* configurazioni persistenti;
+* contesto stabile.
+
+### Memory Pipeline
+
+```text
+Conversation
+      ↓
+Extraction
+      ↓
+Validation
+      ↓
+Storage
+      ↓
+Retrieval
+      ↓
+Ranking
+      ↓
+Context
+```
+
+Non tutte le informazioni devono essere persistite.
+
+---
+
+## 6. Tool System
+
+Un tool espone un'interfaccia controllata verso sistemi esterni.
+
+```text
+Tool
+├── Name
+├── Description
+├── Input Schema
+├── Permissions
+├── Execute()
+├── Output
+└── Error Handling
+```
+
+Ogni chiamata segue:
+
+```text
+Request
+   ↓
+Validation
+   ↓
+Authorization
+   ↓
+Execution
+   ↓
+Result
+```
+
+---
+
+# 🤖 Multi-Agent System
+
+K3 supporta un'architettura multi-agent nella quale agenti specializzati collaborano all'interno di un workflow controllato.
+
+Un possibile set di ruoli:
+
+| Agent         | Responsabilità              |
+| ------------- | --------------------------- |
+| Orchestrator  | Coordina il workflow        |
+| Planner       | Scompone l'obiettivo        |
+| Research      | Raccoglie informazioni      |
+| Analyst       | Analizza dati e risultati   |
+| Coder         | Produce o modifica codice   |
+| Tester        | Verifica il comportamento   |
+| Security      | Controlla rischi e permessi |
+| Reviewer      | Valuta il risultato         |
+| Documentation | Aggiorna documentazione     |
+
+Gli agenti non devono necessariamente essere modelli diversi: possono essere istanze specializzate dello stesso sistema AI con **ruoli, prompt, strumenti e permessi differenti**.
+
+### Principio
+
+```text
+Goal
+ ↓
+Orchestrator
+ ↓
+Planner
+ ↓
+Specialized Agents
+ ↓
+Validation
+ ↓
+Reviewer
+ ↓
+Result
+```
+
+L'Orchestrator rimane responsabile dello stato globale e delle transizioni.
+
+---
+
+# 🔄 Workflow Engine
+
+Il Workflow Engine coordina task, agenti, checkpoint e approvazioni.
+
+### Stati
+
+```text
+CREATED
+   ↓
+PLANNING
+   ↓
+EXECUTING
+   ↓
+VALIDATING
+   ↓
+REVIEWING
+   ↓
+COMPLETED
+```
+
+Stati alternativi:
+
+```text
+WAITING_APPROVAL
+PAUSED
+BLOCKED
+FAILED
+ABORTED
+CANCELLED
+```
+
+### Task Lifecycle
+
+```text
+Create
+  ↓
+Plan
+  ↓
+Checkpoint
+  ↓
+Execute
+  ↓
+Validate
+  ↓
+Review
+  ↓
+Complete
+```
+
+Il workflow deve essere **persistente e ripristinabile**, in modo da non perdere lo stato dopo un'interruzione.
+
+---
+
+# ⏸️ Pause, Resume e Abort
+
+Una caratteristica fondamentale di K3 è la possibilità di interrompere un workflow in esecuzione.
+
+### Pause
+
+```text
+RUNNING
+   ↓
+PAUSED
+```
+
+La pausa deve:
+
+* fermare nuove azioni;
+* preservare lo stato;
+* registrare il motivo;
+* mantenere il contesto;
+* permettere successive modifiche o approvazioni.
+
+### Resume
+
+```text
+PAUSED
+  ↓
+VALIDATION
+  ↓
+EXECUTING
+```
+
+Prima della ripresa il sistema può verificare che:
+
+* configurazione;
+* permessi;
+* piano;
+* strumenti;
+* stato delle risorse
+
+siano ancora validi.
+
+### Abort
+
+```text
+RUNNING
+   ↓
+ABORTED
+```
+
+L'abort termina il workflow senza consentire nuove operazioni.
+
+---
+
+# 🛑 Checkpoints e Change Control
+
+I workflow possono introdurre checkpoint prima di azioni importanti.
+
+Esempio:
+
+```text
+Plan
+ ↓
+Checkpoint
+ ↓
+Human Approval
+ ↓
+Execution
+```
+
+Le modifiche possono essere classificate:
+
+| Impatto | Esempio                                 | Comportamento             |
+| ------- | --------------------------------------- | ------------------------- |
+| Low     | modifica documentazione                 | automatizzabile           |
+| Medium  | modifica codice                         | review consigliata        |
+| High    | modifica architettura, sicurezza o dati | approvazione obbligatoria |
+
+Una modifica ad alto impatto deve poter portare il workflow in:
+
+```text
+WAITING_APPROVAL
+```
+
+Il sistema non deve assumere che una richiesta di modifica importante sia automaticamente autorizzata.
+
+---
+
+# 👤 Human-in-the-Loop
+
+L'utente mantiene il controllo sulle operazioni che richiedono supervisione.
+
+Azioni disponibili:
+
+```text
+APPROVE
+REJECT
+MODIFY
+PAUSE
+RESUME
+ABORT
+REQUEST_REVIEW
+```
+
+Il controllo umano deve essere applicabile soprattutto a:
+
+* modifiche architetturali;
+* operazioni distruttive;
+* accesso a risorse sensibili;
+* modifiche ai permessi;
+* deployment;
+* azioni irreversibili.
+
+---
+
+# 🔐 Security
+
+La sicurezza viene applicata trasversalmente al sistema.
+
+### Secrets
+
+Non committare:
+
+* API key;
+* password;
+* token;
+* credenziali.
+
+Utilizzare environment variables o secret managers.
+
+### Authentication
+
+Le API devono prevedere un meccanismo di autenticazione.
+
+### Authorization
+
+Ogni risorsa e operazione deve essere soggetta a controllo degli accessi.
+
+### Tool & Agent Permissions
+
+```text
+Agent
+  ↓
+Capability
+  ↓
+Tool
+  ↓
+Authorization
+  ↓
+Execution
+```
+
+Un agente non deve avere accesso illimitato al sistema.
+
+### Rate Limiting
+
+Le API dovranno applicare limiti alle richieste.
+
+### Logging Security
+
+I log non devono contenere segreti o dati sensibili non necessari.
+
+---
+
+# 🔒 Privacy e Memory Management
+
+L'utente deve poter controllare la memoria.
+
+Operazioni previste:
+
+```text
+View
+Create / Update
+Delete
+Disable
+```
+
+La memoria temporanea e persistente devono essere distinguibili.
+
+K3 non deve trasformare automaticamente ogni conversazione in memoria permanente.
+
+---
+
+# 🌐 API
+
+L'API prevista è REST e deve essere versionata.
+
+```text
+POST   /api/v1/chat
+
+GET    /api/v1/conversations
+POST   /api/v1/conversations
+DELETE /api/v1/conversations/{id}
+
+GET    /api/v1/memory
+POST   /api/v1/memory
+DELETE /api/v1/memory/{id}
+
+GET    /api/v1/tools
+
+GET    /api/v1/workflows/{id}
+POST   /api/v1/workflows/{id}/pause
+POST   /api/v1/workflows/{id}/resume
+POST   /api/v1/workflows/{id}/abort
+
+POST   /api/v1/checkpoints/{id}/approve
+POST   /api/v1/checkpoints/{id}/reject
+
+GET    /api/v1/health
+```
+
+---
+
+# ⚙️ Configurazione
+
+La configurazione deve rimanere esterna al codice.
+
+```env
+AI_API_KEY=your_api_key
+MODEL_NAME=your_model
+
+MEMORY_ENABLED=true
+
+DEBUG=false
+LOG_LEVEL=INFO
+
+DATABASE_URL=sqlite:///k3.db
+
+API_HOST=127.0.0.1
+API_PORT=8000
+```
+
+Utilizzare:
+
+```text
+.env
+.env.example
+```
+
+`.env` non deve essere committato.
+
+---
+
+# 📁 Struttura del progetto
+
+```text
+k3/
+│
+├── app/
+│   ├── ai/
+│   │   ├── models/
+│   │   ├── providers/
+│   │   ├── prompts/
+│   │   └── context/
+│   │
+│   ├── conversation/
+│   ├── memory/
+│   ├── tools/
+│   │   ├── registry/
+│   │   ├── web/
+│   │   ├── files/
+│   │   └── external/
+│   │
+│   ├── agents/
+│   │   ├── orchestrator.py
+│   │   ├── planner.py
+│   │   ├── executor.py
+│   │   ├── reviewer.py
+│   │   └── state.py
+│   │
+│   ├── workflows/
+│   │   ├── engine.py
+│   │   ├── states.py
+│   │   ├── checkpoints.py
+│   │   └── approvals.py
+│   │
+│   ├── api/
+│   │   ├── routes/
+│   │   ├── schemas/
+│   │   └── middleware/
+│   │
+│   └── core/
+│       ├── config/
+│       ├── logging/
+│       ├── errors/
+│       ├── policies/
+│       └── interfaces/
+│
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+│
+├── docs/
+│   ├── architecture.md
+│   ├── agents.md
+│   ├── workflows.md
+│   ├── memory.md
+│   ├── tools.md
+│   ├── security.md
+│   ├── privacy.md
+│   ├── evaluation.md
+│   ├── development.md
+│   └── decisions/
+│
+├── .env.example
+├── .gitignore
+├── requirements.txt
+├── main.py
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+├── LICENSE
+└── README.md
+```
+
+---
+
+# 📦 Installazione
+
+## Requisiti
+
+* Python 3.x
+* Git
+* API key del provider AI
+
+## Clone
+
+```bash
+git clone https://github.com/your-username/k3.git
+cd k3
+```
+
+## Virtual Environment
+
+```bash
+python -m venv .venv
+```
+
+### Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+## Dipendenze
+
+```bash
+pip install -r requirements.txt
+```
+
+## Configurazione
+
+```bash
+cp .env.example .env
+```
+
+Modificare `.env` con le configurazioni necessarie.
+
+---
+
+# ▶️ Avvio
+
+```bash
+python main.py
+```
+
+Con un'applicazione ASGI:
+
+```bash
+uvicorn app:app --reload
+```
+
+---
+
+# 💡 Esempi
+
+## Chat semplice
+
+```text
+User
+ ↓
+Conversation
+ ↓
+Context
+ ↓
+Prompt
+ ↓
+AI Engine
+ ↓
+Response
+```
+
+## Con Tool
+
+```text
+User
+ ↓
+AI Engine
+ ↓
+Tool Selection
+ ↓
+Validation
+ ↓
+Authorization
+ ↓
+Tool
+ ↓
+Result
+ ↓
+AI Engine
+ ↓
+Response
+```
+
+## Multi-Agent
+
+```text
+User Goal
+   ↓
+Orchestrator
+   ↓
+Planner
+   ↓
+Research / Analysis / Coding
+   ↓
+Tester
+   ↓
+Reviewer
+   ↓
+Human Approval
+   ↓
+Final Result
+```
+
+## Modifica importante
+
+```text
+Task
+ ↓
+Planning
+ ↓
+Proposed Change
+ ↓
+Impact Analysis
+ ↓
+PAUSED / WAITING_APPROVAL
+ ↓
+Human Decision
+ ├── Reject → Stop
+ ├── Modify → Re-plan
+ └── Approve → Continue
+```
+
+---
+
+# 🧪 Testing
+
+Il progetto deve utilizzare più livelli di test:
+
+### Unit
+
+Verifica dei singoli componenti.
+
+### Integration
+
+Verifica delle interazioni tra componenti.
+
+### End-to-End
+
+Verifica del comportamento completo del sistema.
+
+### Workflow Tests
+
+Devono essere verificati anche:
+
+* pause;
+* resume;
+* abort;
+* checkpoint;
+* approval;
+* rejection;
+* recovery;
+* stato persistente;
+* ripresa dopo interruzione.
+
+Framework previsto:
+
+```bash
+pytest
+```
+
+---
+
+# 📊 Evaluation
+
+Il testing verifica il comportamento del software; l'evaluation misura la qualità del comportamento AI.
+
+Metriche possibili:
+
+### AI
+
+* relevance;
+* coherence;
+* accuracy;
+* context retention.
+
+### Memory
+
+* retrieval accuracy;
+* relevance;
+* update correctness.
+
+### Tools
+
+* selection accuracy;
+* input correctness;
+* execution success;
+* recovery.
+
+### Agents
+
+* planning quality;
+* task completion;
+* tool efficiency;
+* unnecessary actions;
+* recovery success.
+
+### Performance
+
+* latency;
+* token usage;
+* AI calls;
+* tool execution time;
+* resource usage.
+
+---
+
+# 📈 Logging e Observability
+
+Il sistema deve rendere osservabili:
+
+```text
+Requests
+Workflow State
+Agent Actions
+Approvals
+Errors
+Latency
+Provider Calls
+Tool Calls
+Memory Events
+System State
+```
+
+Esempio:
+
+```text
+INFO  request received
+INFO  workflow created
+INFO  plan generated
+INFO  checkpoint created
+INFO  approval received
+INFO  agent executed
+INFO  validation completed
+INFO  workflow completed
+```
+
+Livelli:
+
+```text
+DEBUG
+INFO
+WARNING
+ERROR
+CRITICAL
+```
+
+I log devono rispettare le regole di sicurezza definite nella sezione Security.
+
+---
+
+# ❌ Error Handling
+
+Gli errori devono essere strutturati e classificati.
+
+```text
+AI Provider Errors
+Network Errors
+Authentication Errors
+Authorization Errors
+Validation Errors
+Tool Errors
+Agent Errors
+Workflow Errors
+Memory Errors
+Database Errors
+Configuration Errors
+```
+
+Un errore può essere:
+
+```text
+Recoverable
+Non-Recoverable
+```
+
+Per gli errori recuperabili:
+
+```text
+Retry
+Timeout
+Fallback
+Recovery
+Re-plan
+```
+
+Gli errori restituiti all'utente non devono esporre informazioni interne sensibili.
+
+---
+
+# 🗺️ Roadmap
+
+## Phase 0 — Foundation
+
+* repository;
+* configurazione;
+* logging;
+* error handling;
+* interfacce.
+
+## Phase 1 — AI Core
+
+* AI Engine;
+* provider abstraction;
+* model configuration;
+* prompt base;
+* streaming;
+* retry;
+* timeout.
+
+## Phase 2 — Conversations
+
+* Conversation Manager;
+* message model;
+* storage;
+* context handling.
+
+## Phase 3 — Memory
+
+* short-term;
+* long-term;
+* storage;
+* retrieval;
+* ranking;
+* management.
+
+## Phase 4 — Tools
+
+* Tool interface;
+* registry;
+* validation;
+* authorization;
+* execution;
+* external integrations.
+
+## Phase 5 — API
+
+* REST API;
+* authentication;
+* authorization;
+* rate limiting;
+* versioning.
+
+## Phase 6 — Interface
+
+* web interface;
+* chat;
+* conversation management;
+* memory management;
+* tool visibility.
+
+## Phase 7 — Agent & Workflow Engine
+
+* orchestrator;
+* planner;
+* task decomposition;
+* multi-agent execution;
+* persistent state;
+* checkpoints;
+* pause/resume/abort;
+* human approval;
+* recovery.
+
+## Phase 8 — Advanced AI
+
+* advanced context;
+* improved memory;
+* evaluation;
+* optimization;
+* advanced orchestration;
+* multi-agent experimentation.
+
+---
+
+# 📍 Stato dei componenti
+
+| Componente            | Stato          |
+| --------------------- | -------------- |
+| Repository            | 🟢 Active      |
+| Architecture          | 🟡 In Progress |
+| Configuration         | 🟡 In Progress |
+| AI Engine             | 🟡 In Progress |
+| Conversation System   | 🟡 In Progress |
+| Context Manager       | 🟡 In Progress |
+| Prompt System         | 🟡 In Progress |
+| Short-Term Memory     | 🔴 Planned     |
+| Long-Term Memory      | 🔴 Planned     |
+| Tools                 | 🔴 Planned     |
+| REST API              | 🔴 Planned     |
+| Web Interface         | 🔴 Planned     |
+| Authentication        | 🔴 Planned     |
+| Agent System          | 🔴 Planned     |
+| Workflow Engine       | 🔴 Planned     |
+| Evaluation            | 🔴 Planned     |
+| Production Deployment | 🔴 Planned     |
+
+Lo stato deve riflettere esclusivamente funzionalità realmente implementate.
+
+---
+
+# 🔀 Development Workflow
+
+Il branch principale deve rimanere stabile.
+
+```text
+Issue
+  ↓
+Feature Branch
+  ↓
+Development
+  ↓
+Tests
+  ↓
+Pull Request
+  ↓
+Review
+  ↓
+Merge
+```
+
+Esempi:
+
+```text
+feature/ai-engine
+feature/memory-system
+feature/tool-system
+feature/workflow-engine
+
+fix/context-bug
+fix/memory-retrieval
+
+refactor/prompt-system
+```
+
+Ogni Pull Request dovrebbe:
+
+* descrivere la modifica;
+* includere test appropriati;
+* evitare segreti;
+* aggiornare la documentazione;
+* preservare la compatibilità quando possibile.
+
+---
+
+# 📚 Documentazione e ADR
+
+Il README descrive architettura e comportamento generale.
+
+La documentazione tecnica dettagliata vive in:
+
+```text
+docs/
+├── architecture.md
+├── ai-engine.md
+├── conversation-system.md
+├── prompt-system.md
+├── memory.md
+├── tools.md
+├── agents.md
+├── workflows.md
+├── api.md
+├── security.md
+├── privacy.md
+├── evaluation.md
+└── development.md
+```
+
+Le decisioni architetturali importanti devono essere registrate in:
+
+```text
+docs/decisions/
+```
+
+Formato ADR:
+
+```text
+Context
+Decision
+Consequences
+```
+
+Gli ADR sono particolarmente importanti per modifiche che riguardano:
+
+* architettura;
+* sicurezza;
+* memoria;
+* orchestrazione;
+* agenti;
+* workflow.
+
+---
+
+# 🔢 Versioning
+
+K3 utilizza Semantic Versioning:
+
+```text
+MAJOR.MINOR.PATCH
+```
+
+Esempio:
+
+```text
+0.1.0
+0.2.0
+0.3.0
+1.0.0
+```
+
+Durante `0.x` possono cambiare:
+
+* API;
+* architettura;
+* interfacce interne;
+* comportamenti.
+
+`1.0.0` rappresenterà la prima versione considerata stabile.
+
+---
+
+# 🤝 Contributing
+
+Per contribuire:
+
+1. leggere la documentazione;
+2. controllare issue esistenti;
+3. creare una branch;
+4. implementare la modifica;
+5. aggiungere test;
+6. aggiornare la documentazione;
+7. aprire una Pull Request.
+
+I contributi devono rispettare:
+
+* modularità;
+* leggibilità;
+* sicurezza;
+* testabilità;
+* compatibilità;
+* documentazione.
+
+Modifiche architetturali significative devono essere accompagnate da un ADR.
+
+---
+
+# ❓ FAQ
+
+### K3 è un chatbot?
+
+No. Il chatbot è una possibile interfaccia; K3 è una piattaforma composta da AI, conversazioni, contesto, memoria, tools, agenti e workflow.
+
+### K3 utilizza un solo modello?
+
+No. L'AI Engine è progettato per astrarre provider e modelli differenti.
+
+### K3 memorizza tutto?
+
+No. La memoria deve essere selettiva e controllabile.
+
+### Gli agenti possono usare strumenti?
+
+Sì, ma soltanto attraverso capability e autorizzazioni definite.
+
+### Gli agenti possono modificare l'architettura?
+
+Possono proporre modifiche. Le modifiche ad alto impatto devono passare attraverso il workflow di Change Control e, quando richiesto, approvazione umana.
+
+### Posso fermare un workflow?
+
+Sì. Il Workflow Engine prevede:
+
+```text
+PAUSE
+RESUME
+ABORT
+```
+
+### Cosa succede se voglio cambiare una cosa importante durante l'esecuzione?
+
+Il workflow può essere messo in pausa, lo stato viene preservato e la modifica può essere analizzata prima della ripresa.
+
+### K3 è completamente autonomo?
+
+Non per definizione. L'autonomia viene introdotta progressivamente attraverso permessi, policy, checkpoint e supervisione.
+
+### È production-ready?
+
+Durante `0.x` K3 deve essere considerato sperimentale.
+
+---
+
+# 📖 Glossario
+
+| Termine         | Definizione                                         |
+| --------------- | --------------------------------------------------- |
+| AI Engine       | Astrazione verso i modelli AI                       |
+| Agent           | Componente che esegue attività multi-step           |
+| Orchestrator    | Coordina agenti e workflow                          |
+| Context         | Informazioni disponibili al modello                 |
+| Context Manager | Seleziona e prepara il contesto                     |
+| Conversation    | Sessione strutturata con l'utente                   |
+| Memory          | Informazioni temporanee o persistenti               |
+| Model           | Modello AI utilizzato                               |
+| Provider        | Servizio che fornisce accesso al modello            |
+| Prompt System   | Costruisce il prompt finale                         |
+| Tool            | Interfaccia verso un sistema esterno                |
+| Tool Call       | Richiesta di utilizzo di un tool                    |
+| Workflow        | Sequenza controllata di attività                    |
+| Checkpoint      | Punto nel quale il workflow può richiedere verifica |
+| Approval        | Autorizzazione a proseguire                         |
+| Retrieval       | Recupero di informazioni rilevanti                  |
+| Evaluation      | Misurazione della qualità del comportamento AI      |
+
+---
+
+# 📄 Licenza
+
+Questo progetto è distribuito sotto licenza **MIT**.
+
+Consultare:
+
+```text
+LICENSE
+```
+
+per il testo completo.
+
+---
+
+# ⚠️ Disclaimer
+
+K3 è un progetto sperimentale.
+
+Non è garantito che il sistema sia:
+
+* sempre corretto;
+* sempre sicuro;
+* privo di bug;
+* adatto a sistemi mission-critical;
+* adatto a operazioni autonome senza supervisione.
+
+Qualsiasi integrazione con sistemi esterni deve utilizzare adeguati controlli di sicurezza, autorizzazione e monitoraggio.
+
+---
+
+# 🚀 Long-Term Vision
+
+L'evoluzione prevista è:
+
+```text
+                    K3
+                     │
+          ┌──────────┼──────────┐
+          ▼          ▼          ▼
+         AI     CONVERSATION  MEMORY
+          │          │          │
+          └──────────┼──────────┘
+                     ▼
+                  CONTEXT
+                     │
+                     ▼
+               PROMPT SYSTEM
+                     │
+                     ▼
+              AGENTS / WORKFLOW
+                     │
+                     ▼
+                   TOOLS
+                     │
+          ┌──────────┼──────────┐
+          ▼          ▼          ▼
+         WEB       FILES       APIs
+                     │
+                     ▼
+                EVALUATION
+                     │
+                     ▼
+               OBSERVABILITY
+                     │
+                     ▼
+                    API
+                     │
+                     ▼
+                 INTERFACE
+```
+
+La direzione fondamentale rimane:
+
+> **Build the architecture first, then increase intelligence and autonomy progressively.**
+
+K3 deve quindi evolvere attraverso componenti **indipendenti, sostituibili, osservabili e controllabili**, mantenendo sicurezza e supervisione come proprietà strutturali del sistema.
+
+---
+
+**K3 — Intelligent Assistant System**
